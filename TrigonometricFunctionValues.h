@@ -24,8 +24,6 @@ private:
 public:
     static const double a;
     static const double b;
-    const int n_beta;
-    const double d_beta;
     explicit TrigonometricFunctionValues(int n_beta);
 
     double sin(int index) const;

@@ -44,8 +44,6 @@ double TrigonometricFunctionValues::beta(int index, double _d_beta) const {
 }
 
 TrigonometricFunctionValues::TrigonometricFunctionValues(int _n_beta):
-    n_beta(_n_beta),
-    d_beta(getD_beta(_n_beta)),
     sinValues(getSinValues(_n_beta)),
     cosValues(getCosValues(_n_beta)),
     tanValues(getTanValues(_n_beta))
