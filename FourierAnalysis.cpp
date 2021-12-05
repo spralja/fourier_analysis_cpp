@@ -7,6 +7,9 @@
 #include <utility>
 #include <iostream>
 
+const double FourierAnalysis::a = -M_PI / 4.0;
+const double FourierAnalysis::b = M_PI / 4.0;
+
 FourierAnalysis::FourierAnalysis(const int _n_beta, const int _n_sigma)
         : n_beta(_n_beta), n_sigma(_n_sigma), trigs(_n_beta) {}
 

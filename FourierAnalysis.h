@@ -13,6 +13,8 @@ class FourierAnalysis {
 private:
     const TrigonometricFunctionValues trigs;
 public:
+    static const double a;
+    static const double b;
     const int n_beta;
     const int n_sigma;
     FourierAnalysis(int _n_beta, int _n_sigma);
