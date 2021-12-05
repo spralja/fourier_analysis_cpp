@@ -10,16 +10,17 @@
 #include "TrigonometricFunctionValues.h"
 
 class FourierAnalysis {
-private:
-    const TrigonometricFunctionValues trigs;
+
 public:
     static const double a;
     static const double b;
     static const double mu;
     const int n_beta;
     const double d_beta;
-
     const int n_sigma;
+private:
+    const TrigonometricFunctionValues trigs;
+public:
     FourierAnalysis(int _n_beta, int _n_sigma);
     std::pair<double, double> getC(int k, int n, int m) const;
 
@@ -27,6 +28,8 @@ public:
     double alpha(int n, int m, int phi, int theta) const;
     double p(int k, int n, int m, int phi, int theta) const;
     double q(int k, int n, int m, int phi, int theta) const;
+
+    double beta(int index) const;
 };
 
 

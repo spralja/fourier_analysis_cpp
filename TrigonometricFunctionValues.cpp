@@ -4,49 +4,42 @@
 
 #include <iostream>
 #include "TrigonometricFunctionValues.h"
+#include "FourierAnalysis.h"
 
 const double TrigonometricFunctionValues::a = -M_PI / 4.0;
 const double TrigonometricFunctionValues::b = M_PI / 4.0;
 
-double TrigonometricFunctionValues::getD_beta(int _n_beta) const {
-    return (b - a) / _n_beta;
-}
-
-std::vector<double> TrigonometricFunctionValues::getSinValues(int _n_beta) const {
+std::vector<double> TrigonometricFunctionValues::getSinValues(FourierAnalysis* parent){
     std::vector<double> _sinValues = std::vector<double>();
     //_sinValues.reserve(n_beta);
-    for(int i = 0; i < _n_beta; ++i)
-        _sinValues.push_back(std::sin(beta(i, getD_beta(_n_beta))));
+    for(int i = 0; i < parent->n_beta; ++i)
+        _sinValues.push_back(std::sin(parent->beta(i)));
 
     return _sinValues;
 }
 
-std::vector<double> TrigonometricFunctionValues::getCosValues(int _n_beta) const {
+std::vector<double> TrigonometricFunctionValues::getCosValues(FourierAnalysis* parent) {
     std::vector<double> _cosValues = std::vector<double>();
     //_cosValues.reserve(n_beta);
-    for(int i = 0; i < _n_beta; ++i)
-        _cosValues.push_back(std::cos(beta(i, getD_beta(_n_beta))));
+    for(int i = 0; i < parent->n_beta; ++i)
+        _cosValues.push_back(std::cos(parent->beta(i)));
 
     return _cosValues;
 }
 
-std::vector<double> TrigonometricFunctionValues::getTanValues(int _n_beta) const {
+std::vector<double> TrigonometricFunctionValues::getTanValues(FourierAnalysis* parent) {
     std::vector<double> _tanValues = std::vector<double>();
     //_tanValues.reserve(n_beta);
-    for(int i = 0; i < _n_beta; ++i)
-        _tanValues.push_back(std::tan(beta(i, getD_beta(_n_beta))));
+    for(int i = 0; i < parent->n_beta; ++i)
+        _tanValues.push_back(std::tan(parent->beta(i)));
 
     return _tanValues;
 }
 
-double TrigonometricFunctionValues::beta(int index, double _d_beta) const {
-    return a + _d_beta * (index + 0.5);
-}
-
-TrigonometricFunctionValues::TrigonometricFunctionValues(int _n_beta):
-    sinValues(getSinValues(_n_beta)),
-    cosValues(getCosValues(_n_beta)),
-    tanValues(getTanValues(_n_beta))
+TrigonometricFunctionValues::TrigonometricFunctionValues(FourierAnalysis* parent):
+    sinValues(getSinValues(parent)),
+    cosValues(getCosValues(parent)),
+    tanValues(getTanValues(parent))
 {
 
 }

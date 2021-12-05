@@ -9,22 +9,22 @@
 #include <vector>
 #include <cmath>
 
+class FourierAnalysis;
+
 class TrigonometricFunctionValues {
 private:
     const std::vector<double> sinValues;
     const std::vector<double> cosValues;
     const std::vector<double> tanValues;
 
-    double getD_beta(int _n_beta) const;
-    std::vector<double> getSinValues(int _n_beta) const;
-    std::vector<double> getCosValues(int _n_beta) const;
-    std::vector<double> getTanValues(int _n_beta) const;
+    static std::vector<double> getSinValues(FourierAnalysis* parent);
+    static std::vector<double> getCosValues(FourierAnalysis* parent);
+    static std::vector<double> getTanValues(FourierAnalysis* parent);
 
-    double beta(int index, double _n_beta) const;
 public:
     static const double a;
     static const double b;
-    explicit TrigonometricFunctionValues(int n_beta);
+    explicit TrigonometricFunctionValues(FourierAnalysis* parent);
 
     double sin(int index) const;
     double cos(int index) const;
