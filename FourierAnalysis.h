@@ -22,6 +22,11 @@ public:
     const int n_sigma;
     FourierAnalysis(int _n_beta, int _n_sigma);
     std::pair<double, double> getC(int k, int n, int m) const;
+
+    static int kappa(int k);
+    double alpha(int n, int m, int phi, int theta) const;
+    double p(int k, int n, int m, int phi, int theta) const;
+    double q(int k, int n, int m, int phi, int theta) const;
 };
 
 

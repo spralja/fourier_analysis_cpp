@@ -5,7 +5,6 @@
 #include "FourierAnalysis.h"
 #include <cmath>
 #include <utility>
-#include <iostream>
 
 const double FourierAnalysis::a = -M_PI / 4.0;
 const double FourierAnalysis::b = M_PI / 4.0;
@@ -18,28 +17,18 @@ std::pair<double, double> FourierAnalysis::getC(int k, int n, int m) const {
     double f_sum = 0.0;
     double g_sum = 0.0;
 
-    int kappa = -1;
-    if(k % 2 == 0)
-        kappa = -1;
+    int _kappa = kappa(k);
 
     for(int phi = 0; phi < n_beta; ++phi)
         for(int theta = 0; theta < n_beta; ++theta) {
-            const double alpha = M_PI * (m * trigs.tan(phi) / trigs.cos(theta) + n * trigs.tan(theta));
-            const double t1 = std::sin(alpha);
-            const double t2 = std::cos(alpha);
-            const double p =
-                    m * trigs.sin(phi) + trigs.cos(phi) * (k * trigs.cos(theta) + n * trigs.sin(theta));
+            const double _alpha = alpha(n, m, phi, theta);
+            const double t1 = std::sin(_alpha);
+            const double t2 = std::cos(_alpha);
+            const double _p = p(k, n, m, phi, theta);
+            const double _q = q(k, n, m, phi, theta);
 
-
-            const double q =
-                    m * m * trigs.sin(phi) * trigs.tan(phi) +
-                    2 * m * trigs.sin(phi) * (k * trigs.cos(theta) + n * trigs.sin(theta)) +
-                    trigs.cos(phi) *
-                    (k * trigs.cos(theta) + n * trigs.sin(theta)) *
-                    (k * trigs.cos(theta) + n * trigs.sin(theta));
-
-            f_sum += -M_PI * kappa * t1 / p + (kappa * t2 - 1) / q;
-            g_sum += M_PI * kappa * t2 / p + kappa * t1 / q;
+            f_sum += -M_PI * _kappa * t1 / _p + (_kappa * t2 - 1) / _q;
+            g_sum += M_PI * _kappa * t2 / _p + _kappa * t1 / _q;
         }
 
     return std::pair<double, double>(
@@ -49,3 +38,26 @@ std::pair<double, double> FourierAnalysis::getC(int k, int n, int m) const {
 
 }
 
+int FourierAnalysis::kappa(int k) {
+    if(k % 2 == 0)
+        return 1;
+
+    return -1;
+}
+
+double FourierAnalysis::alpha(int n, int m, int phi, int theta) const {
+    return M_PI * (m * trigs.tan(phi) / trigs.cos(theta) + n * trigs.tan(theta));
+}
+
+double FourierAnalysis::p(int k, int n, int m, int phi, int theta) const {
+    return m * trigs.sin(phi) + trigs.cos(phi) * (k * trigs.cos(theta) + n * trigs.sin(theta));
+}
+
+double FourierAnalysis::q(int k, int n, int m, int phi, int theta) const {
+    return
+        m * m * trigs.sin(phi) * trigs.tan(phi) +
+        2 * m * trigs.sin(phi) * (k * trigs.cos(theta) + n * trigs.sin(theta)) +
+            trigs.cos(phi) *
+            (k * trigs.cos(theta) + n * trigs.sin(theta)) *
+            (k * trigs.cos(theta) + n * trigs.sin(theta));
+}
