@@ -15,18 +15,18 @@ private:
     const std::vector<double> cosValues;
     const std::vector<double> tanValues;
 
-    double getD_beta() const;
-    std::vector<double> getSinValues() const;
-    std::vector<double> getCosValues() const;
-    std::vector<double> getTanValues() const;
+    double getD_beta(int _n_beta) const;
+    std::vector<double> getSinValues(int _n_beta) const;
+    std::vector<double> getCosValues(int _n_beta) const;
+    std::vector<double> getTanValues(int _n_beta) const;
 
-    double beta(int index) const;
+    double beta(int index, double _n_beta) const;
 public:
     static const double a;
     static const double b;
     const int n_beta;
     const double d_beta;
-    TrigonometricFunctionValues(int n_beta);
+    explicit TrigonometricFunctionValues(int n_beta);
 
     double sin(int index) const;
     double cos(int index) const;
