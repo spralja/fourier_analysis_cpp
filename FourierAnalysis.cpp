@@ -9,19 +9,14 @@
 
 const double FourierAnalysis::a = -M_PI / 4.0;
 const double FourierAnalysis::b = M_PI / 4.0;
+const double FourierAnalysis::mu = 0.75 / (M_PI * M_PI * M_PI);
 
 FourierAnalysis::FourierAnalysis(const int _n_beta, const int _n_sigma)
-        : n_beta(_n_beta), n_sigma(_n_sigma), trigs(_n_beta) {}
+        : n_beta(_n_beta), n_sigma(_n_sigma), d_beta((b - a) / _n_beta), trigs(_n_beta) {}
 
 std::pair<double, double> FourierAnalysis::getC(int k, int n, int m) const {
-    const double a = -M_PI / 4.0;
-    const double b = M_PI / 4.0;
-    const double d_phi = (b - a) / n_beta;
-    const double d_theta = (b - a) / n_beta;
     double f_sum = 0.0;
     double g_sum = 0.0;
-
-    const double mu = 0.75 / (M_PI * M_PI * M_PI);
 
     int kappa = -1;
     if(k % 2 == 0)
@@ -47,7 +42,10 @@ std::pair<double, double> FourierAnalysis::getC(int k, int n, int m) const {
             g_sum += M_PI * kappa * t2 / p + kappa * t1 / q;
         }
 
-    return std::pair<double, double>(mu * f_sum * d_phi * d_theta, mu * g_sum * d_phi * d_theta);
+    return std::pair<double, double>(
+            mu * f_sum * d_beta * d_beta,
+            mu * g_sum * d_beta * d_beta
+    );
 
 }
 

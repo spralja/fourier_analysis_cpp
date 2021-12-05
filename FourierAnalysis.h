@@ -15,7 +15,10 @@ private:
 public:
     static const double a;
     static const double b;
+    static const double mu;
     const int n_beta;
+    const double d_beta;
+
     const int n_sigma;
     FourierAnalysis(int _n_beta, int _n_sigma);
     std::pair<double, double> getC(int k, int n, int m) const;
