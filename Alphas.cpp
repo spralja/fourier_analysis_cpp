@@ -24,10 +24,5 @@ Alphas::Alphas(FourierAnalysis *parent):
 {}
 
 double Alphas::get(int n, int m, int phi, int theta) const {
-    return alphaValues[
-        parent->indexSigma(n) * parent->z_size * parent->z_size * parent->n_beta +
-        parent->indexSigma(m) * parent->z_size * parent->n_beta +
-        phi * parent->n_beta +
-        theta
-    ];
+    return alphaValues[parent->indexSigma(n) * parent->z_size * parent->z_size * parent->n_beta + parent->indexSigma(m) * parent->z_size * parent->n_beta + phi * parent->n_beta + theta];
 }

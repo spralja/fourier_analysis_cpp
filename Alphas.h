@@ -7,13 +7,12 @@
 
 #include <vector>
 
-#include "FourierAnalysis.h"
-
 class FourierAnalysis;
 
 class Alphas {
 private:
     const FourierAnalysis* parent;
+
     const std::vector<double> alphaValues;
 
     std::vector<double> getAlphaValues() const;
