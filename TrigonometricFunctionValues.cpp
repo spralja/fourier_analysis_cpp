@@ -6,12 +6,9 @@
 #include "TrigonometricFunctionValues.h"
 #include "FourierAnalysis.h"
 
-const double TrigonometricFunctionValues::a = -M_PI / 4.0;
-const double TrigonometricFunctionValues::b = M_PI / 4.0;
-
 std::vector<double> TrigonometricFunctionValues::getSinValues(FourierAnalysis* parent){
     std::vector<double> _sinValues = std::vector<double>();
-    //_sinValues.reserve(n_beta);
+    _sinValues.reserve(parent->n_beta);
     for(int i = 0; i < parent->n_beta; ++i)
         _sinValues.push_back(std::sin(parent->beta(i)));
 
@@ -20,7 +17,7 @@ std::vector<double> TrigonometricFunctionValues::getSinValues(FourierAnalysis* p
 
 std::vector<double> TrigonometricFunctionValues::getCosValues(FourierAnalysis* parent) {
     std::vector<double> _cosValues = std::vector<double>();
-    //_cosValues.reserve(n_beta);
+    _cosValues.reserve(parent->n_beta);
     for(int i = 0; i < parent->n_beta; ++i)
         _cosValues.push_back(std::cos(parent->beta(i)));
 
@@ -29,7 +26,7 @@ std::vector<double> TrigonometricFunctionValues::getCosValues(FourierAnalysis* p
 
 std::vector<double> TrigonometricFunctionValues::getTanValues(FourierAnalysis* parent) {
     std::vector<double> _tanValues = std::vector<double>();
-    //_tanValues.reserve(n_beta);
+    _tanValues.reserve(parent->n_beta);
     for(int i = 0; i < parent->n_beta; ++i)
         _tanValues.push_back(std::tan(parent->beta(i)));
 

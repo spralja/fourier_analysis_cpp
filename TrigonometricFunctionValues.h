@@ -22,8 +22,6 @@ private:
     static std::vector<double> getTanValues(FourierAnalysis* parent);
 
 public:
-    static const double a;
-    static const double b;
     explicit TrigonometricFunctionValues(FourierAnalysis* parent);
 
     double sin(int index) const;
