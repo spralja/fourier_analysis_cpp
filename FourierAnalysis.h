@@ -18,6 +18,7 @@ public:
     const int n_beta;
     const double d_beta;
     const int n_sigma;
+    const int z_size;
 private:
     const TrigonometricFunctionValues trigs;
 public:
@@ -30,6 +31,8 @@ public:
     double q(int k, int n, int m, int phi, int theta) const;
 
     double beta(int index) const;
+
+    int indexSigma(int sigma) const;
 };
 
 

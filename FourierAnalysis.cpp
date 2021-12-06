@@ -11,7 +11,11 @@ const double FourierAnalysis::b = M_PI / 4.0;
 const double FourierAnalysis::mu = 0.75 / (M_PI * M_PI * M_PI);
 
 FourierAnalysis::FourierAnalysis(const int _n_beta, const int _n_sigma):
-    n_beta(_n_beta), n_sigma(_n_sigma), d_beta((b - a) / _n_beta), trigs(this) {}
+    n_beta(_n_beta),
+    n_sigma(_n_sigma),
+    d_beta((b - a) / _n_beta),
+    z_size(2 * n_sigma + 1),
+    trigs(this) {}
 
 std::pair<double, double> FourierAnalysis::getC(int k, int n, int m) const {
     double f_sum = 0.0;
@@ -64,4 +68,8 @@ double FourierAnalysis::q(int k, int n, int m, int phi, int theta) const {
 
 double FourierAnalysis::beta(int index) const {
     return a + d_beta * (index + 0.5);
+}
+
+int FourierAnalysis::indexSigma(int sigma) const {
+    return sigma + n_sigma;
 }
