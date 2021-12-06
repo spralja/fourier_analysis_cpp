@@ -13,13 +13,15 @@ class FourierAnalysis;
 
 class TrigonometricFunctionValues {
 private:
+    const FourierAnalysis* parent;
+
     const std::vector<double> sinValues;
     const std::vector<double> cosValues;
     const std::vector<double> tanValues;
 
-    static std::vector<double> getSinValues(FourierAnalysis* parent);
-    static std::vector<double> getCosValues(FourierAnalysis* parent);
-    static std::vector<double> getTanValues(FourierAnalysis* parent);
+    std::vector<double> getSinValues() const;
+    std::vector<double> getCosValues() const;
+    std::vector<double> getTanValues() const;
 
 public:
     explicit TrigonometricFunctionValues(FourierAnalysis* parent);
