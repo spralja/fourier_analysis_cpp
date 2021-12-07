@@ -4,14 +4,17 @@
 
 #include <iostream>
 #include "FourierAnalysis.h"
+#include "Coefficient.h"
 #include <chrono>
 int main() {
-    auto start = std::chrono::high_resolution_clock::now();
-    auto C = FourierAnalysis(10000, 1).C(1, 1, 1);
-    std::cout << C.first << ", " << C.second << std::endl;
-    auto stop = std::chrono::high_resolution_clock::now();
+    auto parent = FourierAnalysis(1000, 100);
+    auto C2 = Coefficient(&parent, 2, 2, 2);
+    auto C1 = Coefficient(&parent, 1, 1, 1);
 
-    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
-    std::cout << duration.count() << std::endl;
+
+    std::cout << "C1 = " << C1.getF() << std::endl;
+
+    std::cout << "C2 = " << C2.getF() << std::endl;
+
     return 0;
 }
