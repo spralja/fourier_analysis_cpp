@@ -22,7 +22,6 @@ public:
     const int z_size;
 private:
     const TrigonometricFunctionValues trigs;
-    const Alphas alphas;
 public:
     FourierAnalysis(int _n_beta, int _n_sigma);
     std::pair<double, double> getC(int k, int n, int m) const;
