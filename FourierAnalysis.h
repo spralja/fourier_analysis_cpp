@@ -23,7 +23,7 @@ private:
     const TrigonometricFunctionValues trigs;
 public:
     FourierAnalysis(int _n_beta, int _n_sigma);
-    std::pair<double, double> getC(int k, int n, int m) const;
+    std::pair<double, double> C(int k, int n, int m) const;
 
     static int kappa(int k);
     double alpha(int n, int m, int phi, int theta) const;

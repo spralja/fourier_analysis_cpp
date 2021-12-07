@@ -18,7 +18,7 @@ FourierAnalysis::FourierAnalysis(const int _n_beta, const int _n_sigma):
     trigs(this)
 {}
 
-std::pair<double, double> FourierAnalysis::getC(int k, int n, int m) const {
+std::pair<double, double> FourierAnalysis::C(int k, int n, int m) const {
     double f_sum = 0.0;
     double g_sum = 0.0;
 
