@@ -3,8 +3,10 @@
 //
 
 #include "FourierAnalysis.h"
+#include "Alphas.h"
 #include <cmath>
 #include <utility>
+#include <iostream>
 
 const double FourierAnalysis::a = -M_PI / 4.0;
 const double FourierAnalysis::b = M_PI / 4.0;
@@ -23,10 +25,11 @@ std::pair<double, double> FourierAnalysis::C(int k, int n, int m) const {
     double g_sum = 0.0;
 
     int _kappa = kappa(k);
+    Alphas alphas = Alphas(this, n, m);
 
     for(int phi = 0; phi < n_beta; ++phi)
         for(int theta = 0; theta < n_beta; ++theta) {
-            const double _alpha = alpha(n, m, phi, theta);
+            const double _alpha = alphas.get(phi, theta);
             const double t1 = std::sin(_alpha);
             const double t2 = std::cos(_alpha);
             const double _p = p(k, n, m, phi, theta);
