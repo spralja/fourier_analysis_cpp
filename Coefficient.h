@@ -5,27 +5,21 @@
 #ifndef FOURIER_ANALYSIS_CPP_COEFFICIENT_H
 #define FOURIER_ANALYSIS_CPP_COEFFICIENT_H
 
+
 #include <utility>
-#include <list>
 
 class FourierAnalysis;
 
 class Coefficient {
-private:
-    static std::list<std::pair<double, double>> values;
-
-    const FourierAnalysis* parent;
-
-    const std::pair<double, double>& value;
-
-    const std::pair<double, double>& calculateValue(const int& k, const int& n, const int& m) ;
 public:
+    const double F;
+    const double G;
 
+    explicit Coefficient(const double& F,const double& G);
 
-    explicit Coefficient(FourierAnalysis* parent, const int& k, const int& n, const int& m);
+    Coefficient(const std::pair<double, double>& that);
 
-    const double& getF() const;
-    const double& getG() const;
+    Coefficient conjugate() const;
 };
 
 

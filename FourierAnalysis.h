@@ -19,6 +19,8 @@ public:
     const double d_beta;
     const int n_sigma;
     const int z_size;
+    const int z_end;
+
 private:
     const TrigonometricFunctionValues trigs;
 public:

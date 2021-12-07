@@ -5,23 +5,10 @@
 #include "Coefficient.h"
 #include "FourierAnalysis.h"
 
-std::list<std::pair<double, double>> Coefficient::values = std::list<std::pair<double, double>>();
+Coefficient::Coefficient(const double& F, const double& G): F(F), G(G) {}
 
-const std::pair<double, double>& Coefficient::calculateValue(const int& k, const int& n, const int& m) {
-    values.emplace_back();
-    return values.back();
-}
+Coefficient::Coefficient(const std::pair<double, double>& that): F(that.first), G(that.second) {}
 
-
-Coefficient::Coefficient(FourierAnalysis *parent, const int &k, const int &n, const int &m)
-    : parent(parent)
-    , value(calculateValue(k, n, m))
-{}
-
-const double& Coefficient::getF() const {
-    return value.first;
-}
-
-const double& Coefficient::getG() const {
-    return value.second;
+Coefficient Coefficient::conjugate() const {
+    return Coefficient(F, -G);
 }

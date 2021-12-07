@@ -16,7 +16,8 @@ FourierAnalysis::FourierAnalysis(const int _n_beta, const int _n_sigma):
     n_beta(_n_beta),
     n_sigma(_n_sigma),
     d_beta((b - a) / _n_beta),
-    z_size(2 * n_sigma + 1),
+    z_size(2 * n_sigma + 2),
+    z_end(z_size + 1),
     trigs(this)
 {}
 
