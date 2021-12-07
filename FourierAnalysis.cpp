@@ -5,6 +5,7 @@
 #include "FourierAnalysis.h"
 #include <cmath>
 #include <utility>
+#include <iostream>
 
 const double FourierAnalysis::a = -M_PI / 4.0;
 const double FourierAnalysis::b = M_PI / 4.0;
@@ -15,7 +16,8 @@ FourierAnalysis::FourierAnalysis(const int _n_beta, const int _n_sigma):
     n_sigma(_n_sigma),
     d_beta((b - a) / _n_beta),
     z_size(2 * n_sigma + 1),
-    trigs(this)
+    trigs(this),
+    alphas(this)
 {}
 
 std::pair<double, double> FourierAnalysis::getC(int k, int n, int m) const {
@@ -26,7 +28,7 @@ std::pair<double, double> FourierAnalysis::getC(int k, int n, int m) const {
 
     for(int phi = 0; phi < n_beta; ++phi)
         for(int theta = 0; theta < n_beta; ++theta) {
-            const double _alpha = alpha(n, m, phi, theta);
+            const double _alpha = alphas.get(n, m, phi, theta);
             const double t1 = std::sin(_alpha);
             const double t2 = std::cos(_alpha);
             const double _p = p(k, n, m, phi, theta);
