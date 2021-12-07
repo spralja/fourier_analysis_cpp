@@ -5,18 +5,17 @@
 #ifndef FOURIER_ANALYSIS_CPP_ALPHAS_H
 #define FOURIER_ANALYSIS_CPP_ALPHAS_H
 
-#include <vector>
-
-#include "FourierAnalysis.h"
+#include <map>
 
 class FourierAnalysis;
 
 class Alphas {
 private:
     const FourierAnalysis* parent;
-    const std::vector<double> alphaValues;
 
-    std::vector<double> getAlphaValues() const;
+    mutable std::map<int, std::map<int, std::map<int, std::map<int, double>>>> alphaValues;
+
+    std::map<int, std::map<int, std::map<int, std::map<int, double>>>> getAlphaValues() const;
 
 public:
     explicit Alphas(FourierAnalysis* parent);
