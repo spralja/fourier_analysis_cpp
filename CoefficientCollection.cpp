@@ -25,7 +25,7 @@ const Coefficient& CoefficientCollection::get(const int &k, const int &n, const 
 
         const Coefficient C_ = C.conjugate();
         coefficientList.push_back(C_);
-        coefficients[this->hash(k, n, m)] = &coefficientList.back();
+        coefficients[this->hash(-k, -n, -m)] = &coefficientList.back();
     }
 
     return *coefficients[hash];

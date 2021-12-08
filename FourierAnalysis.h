@@ -5,9 +5,10 @@
 #ifndef FOURIER_ANALYSIS_2_FOURIERANALYSIS_H
 #define FOURIER_ANALYSIS_2_FOURIERANALYSIS_H
 
-#include "utility"
+#include <utility>
 
 #include "TrigonometricFunctionValues.h"
+#include "CoefficientCollection.h"
 
 class FourierAnalysis {
 
@@ -23,6 +24,8 @@ public:
 
 private:
     const TrigonometricFunctionValues trigs;
+    CoefficientCollection coefficients;
+
 public:
     FourierAnalysis(int _n_beta, int _n_sigma);
     std::pair<double, double> C(int k, int n, int m) const;

@@ -6,7 +6,6 @@
 #include "Alphas.h"
 #include <cmath>
 #include <utility>
-#include <iostream>
 
 const double FourierAnalysis::a = -M_PI / 4.0;
 const double FourierAnalysis::b = M_PI / 4.0;
@@ -18,7 +17,8 @@ FourierAnalysis::FourierAnalysis(const int _n_beta, const int _n_sigma):
     d_beta((b - a) / _n_beta),
     z_size(2 * n_sigma + 2),
     z_end(z_size + 1),
-    trigs(this)
+    trigs(this),
+    coefficients(this)
 {}
 
 std::pair<double, double> FourierAnalysis::C(int k, int n, int m) const {
@@ -73,8 +73,4 @@ double FourierAnalysis::q(int k, int n, int m, int phi, int theta) const {
 
 double FourierAnalysis::beta(int index) const {
     return a + d_beta * (index + 0.5);
-}
-
-int FourierAnalysis::indexSigma(int sigma) const {
-    return sigma + n_sigma;
 }

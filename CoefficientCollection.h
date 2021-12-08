@@ -8,8 +8,9 @@
 #include <list>
 #include <vector>
 
+#include "Coefficient.h"
+
 class FourierAnalysis;
-class Coefficient;
 
 class CoefficientCollection {
 private:
