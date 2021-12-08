@@ -34,7 +34,6 @@ public:
 
     double beta(int index) const;
 
-    int indexSigma(int sigma) const;
 };
 
 
