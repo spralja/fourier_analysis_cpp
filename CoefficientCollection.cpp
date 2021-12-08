@@ -5,7 +5,6 @@
 #include <iostream>
 #include "CoefficientCollection.h"
 #include "FourierAnalysis.h"
-#include "Coefficient.h"
 
 CoefficientCollection::CoefficientCollection(const FourierAnalysis* parent): parent(parent) {
     const int& z_size = parent->z_size;

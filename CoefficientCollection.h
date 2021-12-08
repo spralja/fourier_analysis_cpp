@@ -19,7 +19,7 @@ private:
     std::vector<Coefficient*> coefficients;
 
 public:
-    CoefficientCollection(const FourierAnalysis* parent);
+    explicit CoefficientCollection(const FourierAnalysis* parent);
 
     const Coefficient& get(const int& k, const int& n, const int& m);
 
