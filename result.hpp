@@ -2,19 +2,23 @@
 #define RESULT_TYPE
 
 #include <string>
+
 #include <sstream>
 
 struct Result {
-  int k, m, n;
-  double F, G;
+  int k;
+  int m;
+  int n;
+  double F;
+  double G;
 };
 
-std::string deserializeResult(Result r) {
-  std::ostringstream sstream;
+std::string serializeResult(Result r) {
+  std::stringstream str;
   
-  sstream << r.k << ',' << r.m << ',' << r.n << '=' << r.F << ',' << r.G;
+  str << r.k << ',' << r.m << ',' << r.n << ',' << r.F << ',' << r.G;
 
-  return sstream.str();
+  return str.str();
 }
 
 #endif
