@@ -29,12 +29,12 @@ void cleanUp () {
     delete outQueue;
 }
 
-void JobRunner(std::pair<int, int> bounds, int thread) {
+void JobRunner(std::pair<int, int> bounds, int maxValue, int thread) {
     for(int k = bounds.first; k <= bounds.second; k++) {
-        for(int m = bounds.first; m <= bounds.second; m++) {
-            for(int n = bounds.first; n <= bounds.second; n++) {
+        for(int m = -maxValue; m <= maxValue; m++) {
+            for(int n = -maxValue; n <= maxValue; n++) {
                 if(DEBUG) std::cout << k << ", " << m << ", " << n << " on " << thread << std::endl;
-
+                
                 auto coeff = coefficients->get(k, m, n);
 
                 outQueue->enqueue({k, m, n, coeff.F, coeff.G});
@@ -58,7 +58,7 @@ void writeResultsToFile(std::string filename = "results.csv") {
 
 int main() {
     const int num_threads = 4;
-    const int maxValue = 10;
+    const int maxValue = 4;
 
     std::thread threads[num_threads];
 
@@ -73,11 +73,10 @@ int main() {
 
     // Start threads
     for (int i = 0; i < num_threads; i++) {
-        // Atm all the threads operate on interval [0, 10]
-        threads[i] = std::thread([intervals, i] {
+        threads[i] = std::thread([intervals, maxValue, i] {
             if(DEBUG) std::cout << "Starting job (" << i << "): " << intervals[i].first << " - " << intervals[i].second << std::endl;
             
-            JobRunner(intervals[i], i);
+            JobRunner(intervals[i], maxValue, i);
         
             if(DEBUG) std::cout << "Finished job (" << i << "): " << intervals[i].first << " - " << intervals[i].second << std::endl;
         });

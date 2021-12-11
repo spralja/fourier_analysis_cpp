@@ -8,12 +8,68 @@
   </head>
   <body>
     <input type="file" id="file-selector" accept=".csv" />
-    <script>
-      const selector = document.querySelector("#file-selector");
+    <div style="padding-top: 20px; padding-bottom: 5px" id="inputs">
+      K: <input style="margin-right: 20px" type="text" id="k" /> M:
+      <input style="margin-right: 20px" type="text" id="m" /> N:
+      <input style="margin-right: 20px" type="text" id="n" />
+    </div>
+    <button id="button">COMPUTE TABLE</button>
 
-      selector.addEventListener("change", (event) => {
-        console.log(event.target.files[0]);
-      });
+    <script src="JSDependancies/jQueryCSV.js"></script>
+    <script src="JSDependancies/tauProlog.js"></script>
+    <script>
+      function main() {
+        const reader = new FileReader();
+        const selector = document.querySelector("#file-selector");
+
+        selector.addEventListener("change", (event) => {
+          reader.readAsText(event.target.files[0]);
+        });
+
+        reader.addEventListener("load", async (event) => {
+          const table = $.csv
+            .toObjects(event.target.result)
+            .reduce((acc, cur) => {
+              return (
+                acc +
+                `table(${cur.k}, ${cur.m}, ${cur.n}, ${cur.F}, ${cur.G}).\n`
+              );
+            }, "");
+
+          const session = pl.create();
+          await session.promiseConsult(table);
+
+          //console.table(answers);
+          const x = document.querySelector("#button");
+          x.addEventListener("click", async () => {
+            const inputs = document.querySelector("#inputs").children;
+
+            const query = `table(${inputs.k.value || "K"}, ${
+              inputs.m.value || "M"
+            }, ${inputs.n.value || "N"}, F, G).`;
+
+            await session.promiseQuery(query);
+
+            const answers = [];
+            for await (let answer of session.promiseAnswers()) {
+              answers.push(
+                Object.entries(answer.links).reduce((acc, [key, value]) => {
+                  acc[key] = value.value;
+                  return acc;
+                }, {})
+              );
+            }
+            console.table(answers);
+          });
+        });
+
+        reader.addEventListener("error", function () {
+          alert("Error : Failed to read file");
+        });
+      }
+    </script>
+    <script>
+      window.addEventListener("load", main);
     </script>
   </body>
 </html>
