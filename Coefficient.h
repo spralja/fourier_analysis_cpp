@@ -7,6 +7,7 @@
 
 
 #include <utility>
+#include <string>
 
 class FourierAnalysis;
 
