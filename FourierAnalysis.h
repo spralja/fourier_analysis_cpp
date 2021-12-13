@@ -34,6 +34,7 @@ public:
     double alpha(int n, int m, int phi, int theta) const;
     double p(int k, int n, int m, int phi, int theta) const;
     double q(int k, int n, int m, int phi, int theta) const;
+    double fourierSum(double x, double y, double z) const;
 
     double beta(int index) const;
 

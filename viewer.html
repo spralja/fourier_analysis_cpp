@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Data Viewer</title>
+
+    <style>
+      /* Center tables for demo */
+      table {
+        margin: 10px auto;
+      }
+
+      /* Default Table Style */
+      table {
+        color: #333;
+        background: white;
+        border: 1px solid grey;
+        font-size: 12pt;
+        border-collapse: collapse;
+      }
+      table thead th,
+      table tfoot th {
+        color: #777;
+        background: rgba(0, 0, 0, 0.1);
+      }
+      table caption {
+        padding: 0.5em;
+      }
+      table th,
+      table td {
+        padding: 0.5em;
+        border: 1px solid lightgrey;
+      }
+      /* Zebra Table Style */
+      [data-table-theme*="zebra"] tbody tr:nth-of-type(odd) {
+        background: rgba(0, 0, 0, 0.05);
+      }
+      [data-table-theme*="zebra"][data-table-theme*="dark"]
+        tbody
+        tr:nth-of-type(odd) {
+        background: rgba(255, 255, 255, 0.05);
+      }
+      /* Dark Style */
+      [data-table-theme*="dark"] {
+        color: #ddd;
+        background: #333;
+        font-size: 12pt;
+        border-collapse: collapse;
+      }
+      [data-table-theme*="dark"] thead th,
+      [data-table-theme*="dark"] tfoot th {
+        color: #aaa;
+        background: rgba(0255, 255, 255, 0.15);
+      }
+      [data-table-theme*="dark"] caption {
+        padding: 0.5em;
+      }
+      [data-table-theme*="dark"] th,
+      [data-table-theme*="dark"] td {
+        padding: 0.5em;
+        border: 1px solid grey;
+      }
+    </style>
+  </head>
+  <body>
+    <input type="file" id="file-selector" accept=".csv" />
+    <div
+      style="padding-top: 20px; padding-bottom: 5px; margin: 10px auto"
+      id="inputsHolder"
+    >
+      K:
+      <input style="margin-right: 20px" type="text" class="inputs" id="k" /> M:
+      <input style="margin-right: 20px" type="text" class="inputs" id="m" /> N:
+      <input style="margin-right: 20px" type="text" class="inputs" id="n" /> F:
+      <input style="margin-right: 20px" type="text" class="inputs" id="F" /> G:
+      <input style="margin-right: 20px" type="text" class="inputs" id="G" />
+    </div>
+    <table id="myTable" data-table-theme="dark"></table>
+
+    <script src="JSDependancies/jQueryCSV.js"></script>
+    <script src="JSDependancies/tauProlog.js"></script>
+    <script>
+      let session = null;
+      function renderTableHeader(data) {
+        const header = Object.keys(data[0]);
+        return header
+          .map((key, index) => `<th key=${index}>${key}</th>`)
+          .join(" ");
+      }
+
+      function renderTableRows(data) {
+        const keys = Object.keys(data[0]);
+        const table = data
+          .map((row, index) => {
+            return `<tr key=${index}>
+              ${keys
+                .map(
+                  (key, index) =>
+                    `<td key=${index}>${JSON.stringify(row[key])}</td>`
+                )
+                .join(" ")}
+            </tr>`;
+          })
+          .join(" ");
+        return table;
+      }
+
+      async function onInput() {
+        if (!session) throw new Error("table not loaded");
+
+        const inputs = {};
+        document.querySelectorAll(".inputs").forEach((node) => {
+          inputs[node.id] = node;
+        });
+
+        const query = `table(${inputs.k.value.toLocaleUpperCase() || "K"}, ${
+          inputs.m.value.toLocaleUpperCase() || "M"
+        }, ${inputs.n.value.toLocaleUpperCase() || "N"}, ${
+          inputs.F.value.toLocaleUpperCase() || "F"
+        }, ${inputs.G.value.toLocaleUpperCase() || "G"}).`;
+
+        await session.promiseQuery(query);
+
+        const answers = [];
+        for await (let answer of session.promiseAnswers()) {
+          answers.push(
+            Object.entries(answer.links).reduce((acc, [key, value]) => {
+              acc[key] = value.value;
+              return acc;
+            }, {})
+          );
+        }
+        console.log("hi");
+
+        document.querySelector("#myTable").innerHTML =
+          `<tr>${renderTableHeader(answers)}</tr>` + renderTableRows(answers);
+      }
+    </script>
+    <script>
+      function main() {
+        const reader = new FileReader();
+        const selector = document.querySelector("#file-selector");
+
+        selector.addEventListener("change", (event) => {
+          reader.readAsText(event.target.files[0]);
+        });
+
+        document.querySelectorAll(".inputs").forEach((node) => {
+          node.addEventListener("input", onInput);
+        });
+
+        reader.addEventListener("load", async (event) => {
+          const table = $.csv
+            .toObjects(event.target.result)
+            .reduce((acc, cur) => {
+              return (
+                acc +
+                `table(${cur.k}, ${cur.m}, ${cur.n}, ${cur.F}, ${cur.G}).\n`
+              );
+            }, "");
+
+          session = pl.create();
+          await session.promiseConsult(table);
+          await onInput();
+        });
+
+        reader.addEventListener("error", function () {
+          alert("Error : Failed to read file");
+        });
+      }
+    </script>
+    <script>
+      window.addEventListener("load", () => {
+        try {
+          main();
+        } catch (e) {
+          console.error("Some shit broke");
+        }
+      });
+    </script>
+  </body>
+</html>

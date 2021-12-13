@@ -15,13 +15,13 @@ class FourierAnalysis;
 class CoefficientCollection {
 private:
     const FourierAnalysis* parent;
-    std::list<Coefficient> coefficientList;
-    std::vector<Coefficient*> coefficients;
+    mutable std::list<Coefficient> coefficientList;
+    mutable std::vector<Coefficient*> coefficients;
 
 public:
     explicit CoefficientCollection(const FourierAnalysis* parent);
 
-    const Coefficient& get(const int& k, const int& n, const int& m);
+    const Coefficient& get(const int& k, const int& n, const int& m) const;
 
 private:
     int hash(const int& k, const int& n, const int& m) const;

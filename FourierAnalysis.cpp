@@ -74,3 +74,35 @@ double FourierAnalysis::q(int k, int n, int m, int phi, int theta) const {
 double FourierAnalysis::beta(int index) const {
     return a + d_beta * (index + 0.5);
 }
+
+double FourierAnalysis::fourierSum(double x, double y, double z) const {
+    double sum = 0.0;
+    for(int n = -n_sigma; n <= n_sigma; ++n)
+        for(int m = 1; m <= n_sigma; ++m) {
+            for(int k = -n_sigma; k <= n_sigma; ++k) {
+                const auto& C = coefficients.get(k, n, m);
+                sum += C.F * std::cos(k * x + n * y + m * z);
+                sum += C.G * std::sin(k * x + n * y + m * z);
+            }
+        }
+
+    for(int n = 1; n <= n_sigma; ++n) {
+        for(int k = -n_sigma; k <= n_sigma; ++k) {
+            const auto& C = coefficients.get(k, n, 0);
+            sum += C.F * std::cos(k * x + n * y);
+            sum += C.G * std::sin(k * x + n * y);
+        }
+    }
+
+    for(int k = 1; k <= n_sigma; ++k) {
+        const auto& C = coefficients.get(k, 0, 0);
+        sum += C.F * std::cos(k * x);
+        sum += C.G * std::sin(k * x);
+    }
+
+    sum *= 2;
+    const auto& C = coefficients.get(0, 0, 0);
+    sum += C.F;
+
+    return sum;
+}
