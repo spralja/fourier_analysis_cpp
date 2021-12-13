@@ -15,7 +15,7 @@ CoefficientCollection::CoefficientCollection(const FourierAnalysis* parent): par
     coefficients.reserve(z_size * z_size * z_size);
 }
 
-const Coefficient& CoefficientCollection::get(const int &k, const int &n, const int &m) {
+const Coefficient& CoefficientCollection::get(const int &k, const int &n, const int &m) const {
     const int& hash = this->hash(k, n, m);
     if(coefficients[hash] == nullptr) {
         const Coefficient C = parent->C(k, n, m);
