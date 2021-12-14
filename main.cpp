@@ -12,6 +12,7 @@
 #include "CoefficientCollection.h"
 #include "ThreadSafeQueue.h"
 #include "Result.hpp"
+#include "LeakyBucket.hpp"
 #include "Chunker.hpp"
 
 #define DEBUG false
@@ -19,9 +20,12 @@
 //std::cout << std::thread::hardware_concurrency() << std::endl;
 
 //  important these are declared on the heap so it can be shared
-auto fa = new FourierAnalysis(1000, 100);
-auto coefficients = new CoefficientCollection(fa);
-auto outQueue = new codepi::ThreadSafeQueue<Result>();
+auto *fa = new FourierAnalysis(1000, 100);
+auto *coefficients = new CoefficientCollection(fa);
+auto *outQueue = new codepi::ThreadSafeQueue<Result>();
+auto *inQueue = new LeakyBucket();
+
+std::mutex m;
 
 void cleanUp () {
     delete fa;
@@ -29,36 +33,10 @@ void cleanUp () {
     delete outQueue;
 }
 
-void JobRunner(std::pair<int, int> bounds, int maxValue, int thread) {
-    for(int k = bounds.first; k <= bounds.second; k++) {
-        for(int n = -maxValue; n <= maxValue; n++) {
-            for(int m = 1; m <= maxValue; m++) {
-                auto coeff = coefficients->get(k, n, m);
-
-                outQueue->enqueue({k, n, m, coeff.F, coeff.G});
-            }
-        }
-    }
-
-    for(int k = bounds.first; k <= bounds.second; k++) {
-        for(int n = 1; n <= maxValue; n++) {
-            auto coeff = coefficients->get(k, n, 0);
-
-            outQueue->enqueue({k, n, 0, coeff.F, coeff.G});
-        }
-    }
-
-    for(int k = std::max(1, bounds.first); k <= bounds.second; k++) {
-        auto coeff = coefficients->get(k, 0, 0);
-
-        outQueue->enqueue({k, 0, 0, coeff.F, coeff.G});
-    }
-}
-
 void writeResultsToFile(std::string filename = "results.csv") {
     std::cout << "Results Calculated: " << outQueue->size() << std::endl;
 
-    std::ofstream outfile("results.csv", std::ios::out | std::ios::trunc);
+    std::ofstream outfile("results.csv", std::ios::out | std::ios::app);
     outfile << "k,m,n,F,G" << std::endl;
 
     while (!outQueue->empty()) {
@@ -68,42 +46,51 @@ void writeResultsToFile(std::string filename = "results.csv") {
     outfile.close();
 }
 
+void JobRunner() {
+    Triplet job;
+    while (inQueue->leak(job)) {
+        auto coeff = coefficients->get(job.k, job.n, job.m);
+        //auto conj = coeff.conjugate();
+        //outQueue->enqueue({-job.k, -job.n, -job.m, conj.F, conj.G});
+
+        outQueue->enqueue({job.k, job.n, job.m, coeff.F, coeff.G});
+
+        if (outQueue->size() >= 30) {
+            if(m.try_lock()) {
+                writeResultsToFile();
+                m.unlock();
+            }
+        }
+    }
+}
+
 int main() {
     const int num_threads = 4;
     const int maxValue = 99;
 
-    std::thread threads[num_threads];
+    inQueue->fill({-5, 0}, 10);
 
-    // Print all the intervals
-    auto intervals = Chunker(maxValue, num_threads);
-    if (DEBUG) {
-        for (int i = 0; i < num_threads; i++) {
-            std::cout << intervals[i].first << " - " << intervals[i].second << std::endl;
-        }
-    }
-    
+    std::thread threads[num_threads];
 
     // Start threads
     for (int i = 0; i < num_threads; i++) {
-        threads[i] = std::thread([intervals, maxValue, i] {
-            if(DEBUG) std::cout << "Starting job (" << i << "): " << intervals[i].first << " - " << intervals[i].second << std::endl;
+        threads[i] = std::thread([i] {
+            if(DEBUG) std::cout << "Starting job (" << i << "): " << std::endl;
             
-            JobRunner(intervals[i], maxValue, i);
+            JobRunner();
         
-            if(DEBUG) std::cout << "Finished job (" << i << "): " << intervals[i].first << " - " << intervals[i].second << std::endl;
+            if(DEBUG) std::cout << "Finished job (" << i << "): " << std::endl;
         });
     } 
 
     // Wait to close all threads
     for (int i = 0; i < num_threads; i++) {
         threads[i].join();
-        if(DEBUG) std::cout << "Closed thread (" << i << "): " << intervals[i].first << " - " << intervals[i].second << std::endl;
+        if(DEBUG) std::cout << "Closed thread (" << i << "): " << std::endl;
     } 
 
     writeResultsToFile();
-
     cleanUp();
-    delete intervals;
 
     return 0;
 }

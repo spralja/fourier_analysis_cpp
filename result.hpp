@@ -7,8 +7,9 @@
 
 struct Result {
   int k;
-  int m;
   int n;
+  int m;
+
   double F;
   double G;
 };
