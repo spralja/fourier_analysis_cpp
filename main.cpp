@@ -70,7 +70,7 @@ void writeResultsToFile(std::string filename = "results.csv") {
 
 int main() {
     const int num_threads = 4;
-    const int maxValue = 4;
+    const int maxValue = 99;
 
     std::thread threads[num_threads];
 
