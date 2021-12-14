@@ -31,15 +31,27 @@ void cleanUp () {
 
 void JobRunner(std::pair<int, int> bounds, int maxValue, int thread) {
     for(int k = bounds.first; k <= bounds.second; k++) {
-        for(int m = -maxValue; m <= maxValue; m++) {
-            for(int n = -maxValue; n <= maxValue; n++) {
-                if(DEBUG) std::cout << k << ", " << m << ", " << n << " on " << thread << std::endl;
-                
-                auto coeff = coefficients->get(k, m, n);
+        for(int n = -maxValue; n <= maxValue; n++) {
+            for(int m = 1; m <= maxValue; m++) {
+                auto coeff = coefficients->get(k, n, m);
 
-                outQueue->enqueue({k, m, n, coeff.F, coeff.G});
+                outQueue->enqueue({k, n, m, coeff.F, coeff.G});
             }
         }
+    }
+
+    for(int k = bounds.first; k <= bounds.second; k++) {
+        for(int n = 1; n <= maxValue; n++) {
+            auto coeff = coefficients->get(k, n, 0);
+
+            outQueue->enqueue({k, n, 0, coeff.F, coeff.G});
+        }
+    }
+
+    for(int k = std::max(1, bounds.first); k <= bounds.second; k++) {
+        auto coeff = coefficients->get(k, 0, 0);
+
+        outQueue->enqueue({k, 0, 0, coeff.F, coeff.G});
     }
 }
 
