@@ -17,7 +17,7 @@ struct Result {
 std::string serializeResult(Result r) {
   std::stringstream str;
   
-  str << r.k << ',' << r.m << ',' << r.n << ',' << r.F << ',' << r.G;
+  str << r.k << ',' << r.n << ',' << r.m << ',' << r.F << ',' << r.G;
 
   return str.str();
 }

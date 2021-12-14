@@ -37,7 +37,7 @@ void writeResultsToFile(std::string filename = "results.csv") {
     std::cout << "Results Calculated: " << outQueue->size() << std::endl;
 
     std::ofstream outfile("results.csv", std::ios::out | std::ios::app);
-    outfile << "k,m,n,F,G" << std::endl;
+    //outfile << "k,n,m,F,G" << std::endl;
 
     while (!outQueue->empty()) {
         outfile << serializeResult(outQueue->dequeue()) << std::endl;
@@ -46,7 +46,7 @@ void writeResultsToFile(std::string filename = "results.csv") {
     outfile.close();
 }
 
-void JobRunner() {
+void JobRunner(int threadNr) {
     Triplet job;
     while (inQueue->leak(job)) {
         auto coeff = coefficients->get(job.k, job.n, job.m);
@@ -55,8 +55,9 @@ void JobRunner() {
 
         outQueue->enqueue({job.k, job.n, job.m, coeff.F, coeff.G});
 
-        if (outQueue->size() >= 30) {
+        if (outQueue->size() >= 100) {
             if(m.try_lock()) {
+                std::cout << "Thread " << threadNr << " - ";
                 writeResultsToFile();
                 m.unlock();
             }
@@ -65,10 +66,10 @@ void JobRunner() {
 }
 
 int main() {
-    const int num_threads = 4;
-    const int maxValue = 99;
+    const int num_threads = 6;
+    const int maxValue = 10;
 
-    inQueue->fill({-5, 0}, 10);
+    inQueue->fill({1, 5}, maxValue);
 
     std::thread threads[num_threads];
 
@@ -77,7 +78,7 @@ int main() {
         threads[i] = std::thread([i] {
             if(DEBUG) std::cout << "Starting job (" << i << "): " << std::endl;
             
-            JobRunner();
+            JobRunner(i);
         
             if(DEBUG) std::cout << "Finished job (" << i << "): " << std::endl;
         });

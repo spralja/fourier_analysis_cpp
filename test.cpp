@@ -1,17 +1,38 @@
-#include "Chunker.hpp"
-#include "result.hpp"
 #include <iostream>
+#include <sstream>
+#include "LeakyBucket.hpp"
+
 using namespace std;
 int main() {
-  auto lol = Chunker(10, 2);
+    std::string line = "1,3,-10,0,1";
+    unsigned long pos = 0;
+    pos = line.find(',');
+    string index = line.substr(0, pos);
+    line.erase(0, pos += 1);
 
-  cout << lol[0].first << " " << lol[0].second << endl;
-  cout << lol[1].first << " " << lol[1].second << endl;
+    pos = line.find(',');
+    index += line.substr(0, pos);
+    line.erase(0, pos += 1);
 
-  Result x = {10, 20, 30, 10.0, 120.0};
+    pos = line.find(',');
+    index += line.substr(0, pos);
+    line.erase(0, pos += 1);
 
-  cout << serializeResult(x) << endl;
+    std::cout << index << std::endl;
 
+    std::stringstream ss;
+    ss << 1 << 3 << -10;
+
+    cout << ss.str() << endl;
+
+    LeakyBucket lb;
+
+    lb.fill({0, 5}, 10, "jeff.csv");
+
+    Triplet T;
+    while(lb.leak(T)) {
+        //std::cout << T.k << " - " << T.n << " - " << T.m << " - " << std::endl;
+    }
 
   return 0;
 }

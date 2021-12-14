@@ -4,7 +4,8 @@
 #include "ThreadSafeQueue.h"
 #include <string>
 #include <unordered_map>
-
+#include <fstream>
+#include <sstream>
 
 struct Triplet {
   int k;
@@ -24,9 +25,11 @@ public:
     void fill(std::pair<int, int> bounds, int maxValue, const string& infile = "results.csv") {
         //                  vvv Can probably be a better type
         std::unordered_map<string, bool> alreadyComputedMap;
-        std::ifstream alreadyComputedFile(infile);
+        std::ifstream alreadyComputedFile;
+        alreadyComputedFile.open(infile);
 
         if( alreadyComputedFile.is_open() ) {
+
             bool firstLine = true;
 
             for(string line; getline(alreadyComputedFile, line); ) {
@@ -45,6 +48,8 @@ public:
                 index += line.substr(0, pos);
                 line.erase(0, pos += 1);
 
+                //std::cout << index << std::endl;
+
                 alreadyComputedMap[index] = true;
             }
         }
@@ -59,7 +64,7 @@ public:
 
                     auto finder = alreadyComputedMap.find(ss.str());
 
-                    if (finder != alreadyComputedMap.end()) {
+                    if (finder == alreadyComputedMap.end()) {
                         this->bucket.enqueue({k, n, m});
                     }
                 }
@@ -73,7 +78,7 @@ public:
 
                 auto finder = alreadyComputedMap.find(ss.str());
 
-                if (finder != alreadyComputedMap.end()) {
+                if (finder == alreadyComputedMap.end()) {
                     this->bucket.enqueue({k, n, 0});
                 }
             }
@@ -85,7 +90,7 @@ public:
 
             auto finder = alreadyComputedMap.find(ss.str());
 
-            if (finder != alreadyComputedMap.end()) {
+            if (finder == alreadyComputedMap.end()) {
                 this->bucket.enqueue({k, 0, 0});
             }
         }
