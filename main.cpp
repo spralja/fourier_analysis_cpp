@@ -35,7 +35,7 @@ void JobRunner(std::pair<int, int> bounds, int maxValue, int thread) {
             for(int n = -maxValue; n <= maxValue; n++) {
                 if(DEBUG) std::cout << k << ", " << m << ", " << n << " on " << thread << std::endl;
                 
-                auto coeff = coefficients->get(k, m, n);
+                auto coeff = coefficients->get(k, n, m);
 
                 outQueue->enqueue({k, m, n, coeff.F, coeff.G});
             }
