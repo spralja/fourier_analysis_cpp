@@ -25,7 +25,7 @@
 
 namespace codepi{
 
-template <class T, class Container=std::queue<T>>
+template <class T, class Container=std::queue<T> >
 class ThreadSafeQueue {
 public:
 
