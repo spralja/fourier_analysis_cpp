@@ -6,34 +6,24 @@
 #include "CoefficientCollection.h"
 #include "FourierAnalysis.h"
 
-CoefficientCollection::CoefficientCollection(const FourierAnalysis* parent): parent(parent) {
-    const int& z_size = parent->z_size;
-
-    coefficientList = std::list<Coefficient>();
-
-    coefficients = std::vector<Coefficient*>(z_size * z_size * z_size, nullptr);
-    coefficients.reserve(z_size * z_size * z_size);
+CoefficientCollection::CoefficientCollection(const FourierAnalysis* parent):
+    parent(parent){
+    coefficients.reserve(parent->z_size * parent->z_size * parent->z_size);
 }
 
 const Coefficient& CoefficientCollection::get(const int &k, const int &n, const int &m) const {
-    const int& hash = this->hash(k, n, m);
-    if(coefficients[hash] == nullptr) {
-        const Coefficient C = parent->C(k, n, m);
-        coefficientList.emplace_back(C);
-        coefficients[hash] = &coefficientList.back();
-
-        const Coefficient C_ = C.conjugate();
-        coefficientList.push_back(C_);
-        coefficients[this->hash(-k, -n, -m)] = &coefficientList.back();
-    }
-
+    const std::string hash = this->hash(k, n, m);
+    if(coefficients[hash] == nullptr)
+        coefficients[hash] = new Coefficient(parent->C(k, n, m));
     return *coefficients[hash];
 }
 
-int CoefficientCollection::hash(const int &k, const int &n, const int &m) const {
-    const int& n_sigma = parent->n_sigma;
-    const int& z_end = parent->z_end;
+std::string CoefficientCollection::hash(const int &k, const int &n, const int &m) const {
+    return std::to_string(k) + " " + std::to_string(n) + " " + std::to_string(m);
+}
 
-    return (k + n_sigma) * z_end * z_end + (n + n_sigma) * z_end + (m + n_sigma);
+CoefficientCollection::~CoefficientCollection() {
+    for(auto& coefficient : coefficients)
+        delete coefficient.second;
 }
 

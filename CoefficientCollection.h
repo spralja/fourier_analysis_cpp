@@ -5,8 +5,8 @@
 #ifndef FOURIER_ANALYSIS_CPP_COEFFICIENTCOLLECTION_H
 #define FOURIER_ANALYSIS_CPP_COEFFICIENTCOLLECTION_H
 
-#include <list>
-#include <vector>
+#include <unordered_map>
+#include <string>
 
 #include "Coefficient.h"
 
@@ -15,16 +15,16 @@ class FourierAnalysis;
 class CoefficientCollection {
 private:
     const FourierAnalysis* parent;
-    mutable std::list<Coefficient> coefficientList;
-    mutable std::vector<Coefficient*> coefficients;
+    mutable std::unordered_map<std::string, Coefficient*> coefficients;
 
 public:
     explicit CoefficientCollection(const FourierAnalysis* parent);
+    ~CoefficientCollection();
 
     const Coefficient& get(const int& k, const int& n, const int& m) const;
 
 private:
-    int hash(const int& k, const int& n, const int& m) const;
+    std::string hash(const int& k, const int& n, const int& m) const;
 };
 
 
