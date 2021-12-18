@@ -10,6 +10,9 @@
 const double FourierAnalysis::a = -M_PI / 4.0;
 const double FourierAnalysis::b = M_PI / 4.0;
 const double FourierAnalysis::mu = 0.75 / (M_PI * M_PI * M_PI);
+const double FourierAnalysis::correct_mu = 6 / std::sqrt(std::pow(2 * M_PI, 3));
+const double FourierAnalysis::adjusted_mu = correct_mu / mu;
+const double FourierAnalysis::total_mu = adjusted_mu * correct_mu;
 
 FourierAnalysis::FourierAnalysis(const int _n_beta, const int _n_sigma):
     n_beta(_n_beta),
@@ -104,5 +107,6 @@ double FourierAnalysis::fourierSum(double x, double y, double z) const {
     const auto& C = coefficients.get(0, 0, 0);
     sum += C.F;
 
-    return sum;
+    return total_mu * sum;
+
 }
