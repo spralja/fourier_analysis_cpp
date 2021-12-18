@@ -6,6 +6,7 @@
 #include "Alphas.h"
 #include <cmath>
 #include <utility>
+#include <iostream>
 
 const double FourierAnalysis::a = -M_PI / 4.0;
 const double FourierAnalysis::b = M_PI / 4.0;
@@ -13,6 +14,7 @@ const double FourierAnalysis::mu = 0.75 / (M_PI * M_PI * M_PI);
 const double FourierAnalysis::correct_mu = 6 / std::sqrt(std::pow(2 * M_PI, 3));
 const double FourierAnalysis::adjusted_mu = correct_mu / mu;
 const double FourierAnalysis::total_mu = adjusted_mu * correct_mu;
+const double FourierAnalysis::C000 = 1;
 
 FourierAnalysis::FourierAnalysis(const int _n_beta, const int _n_sigma):
     n_beta(_n_beta),
@@ -83,30 +85,48 @@ double FourierAnalysis::fourierSum(double x, double y, double z) const {
     for(int n = -n_sigma; n <= n_sigma; ++n)
         for(int m = 1; m <= n_sigma; ++m) {
             for(int k = -n_sigma; k <= n_sigma; ++k) {
-                const auto& C = coefficients.get(k, n, m);
+                const Coefficient& C = coefficients.get(k, n, m);
                 sum += C.F * std::cos(k * x + n * y + m * z);
                 sum += C.G * std::sin(k * x + n * y + m * z);
             }
         }
-
     for(int n = 1; n <= n_sigma; ++n) {
         for(int k = -n_sigma; k <= n_sigma; ++k) {
-            const auto& C = coefficients.get(k, n, 0);
+            const Coefficient& C = coefficients.get(k, n, 0);
             sum += C.F * std::cos(k * x + n * y);
             sum += C.G * std::sin(k * x + n * y);
         }
     }
 
     for(int k = 1; k <= n_sigma; ++k) {
-        const auto& C = coefficients.get(k, 0, 0);
+        const Coefficient& C = coefficients.get(k, 0, 0);
         sum += C.F * std::cos(k * x);
         sum += C.G * std::sin(k * x);
     }
 
     sum *= 2;
-    const auto& C = coefficients.get(0, 0, 0);
-    sum += C.F;
+    sum += C000;
 
     return total_mu * sum;
 
+}
+
+double FourierAnalysis::MSE(const int &N) const {
+    double sum = 0.0;
+    const double dx = 2 * M_PI / N;
+    const double dy = 2 * M_PI / N;
+    const double dz = 2 * M_PI / N;
+
+    for(int i = 0; i < N; ++i) {
+        const double x = -M_PI + (i + 0.5) * dx;
+        for(int j = 0; j < N; ++j) {
+            const double y = -M_PI + (j + 0.5) * dy;
+            for(int k = 0; k < N; ++k) {
+                const double z = -M_PI + (k + 0.5) * dz;
+                sum += std::pow((1 / sqrt(x*x + y*y + z*z)) - fourierSum(x, y ,z), 2);
+            }
+        }
+    }
+
+    return sum * dx * dy * dz;
 }

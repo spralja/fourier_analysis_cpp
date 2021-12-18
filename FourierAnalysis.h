@@ -19,6 +19,7 @@ public:
     static double const correct_mu;
     static double const adjusted_mu;
     static double const total_mu;
+    static const double C000;
     const int n_beta;
     const double d_beta;
     const int n_sigma;
@@ -41,6 +42,7 @@ public:
 
     double beta(int index) const;
 
+    double MSE(const int& N) const;
 };
 
 
