@@ -18,7 +18,7 @@ const Coefficient& CoefficientCollection::get(const int &k, const int &n, const 
     return *coefficients[hash];
 }
 
-std::string CoefficientCollection::hash(const int &k, const int &n, const int &m) const {
+estd::string CoefficientCollection::hash(const int &k, const int &n, const int &m) {
     return std::to_string(k) + " " + std::to_string(n) + " " + std::to_string(m);
 }
 

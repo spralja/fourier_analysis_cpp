@@ -24,7 +24,7 @@ public:
     const Coefficient& get(const int& k, const int& n, const int& m) const;
 
 private:
-    std::string hash(const int& k, const int& n, const int& m) const;
+    static std::string hash(const int& k, const int& n, const int& m) ;
 };
 
 
